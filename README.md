@@ -1,86 +1,39 @@
-# RoomPilot
+# RoomPilot - Full-Stack Booking App
 
-## Mantis Template
-### 1. Setup
-```
-npm install
-npm run dev
-```
+Full-stack (React, Next.js, PostgreSQL) web application for booking meeting rooms, originally created as teaching material for UCL Computer Science students. Available at [roompilot-app.com](https://roompilot-app.com).
 
-### 2. Fix JWEDecryptionFailed error
-- Set `axiosServices` `baseURL` to `''` in `axios.ts`
+## Tech Stack
 
-### 3. Create local PostgreSQL database
-```
-// Create an app user
-CREATE USER meeting_user WITH PASSWORD 'meeting_password';
+- **Core:** React, Next.js
+- **Styling:** Tailwind CSS, MUI (Material UI)
+- **Auth:** NextAuth
+- **Data:** Prisma, PostgreSQL (Neon)
+- **Hosting:** Vercel
+- **Previous deployment:** Docker image deployed on an Azure VM (now migrated to Vercel + Neon)
 
-// Create the app database, owned by that user
-CREATE DATABASE meeting_db OWNER meeting_user;
+## Features
 
-// Ensure meeting_user has full access to created database
-GRANT ALL PRIVILEGES ON DATABASE meeting_db TO meeting_user;
+- CRUD functionality via Next.js and Prisma
+- Data visualisation via MUI
+- Mobile optimisation via Tailwind
+- External provider authentication via Google API
+- Role-based access control via NextAuth
+- Containerisation via Docker
 
-// Allow meeting_user to create database
-ALTER ROLE meeting_user CREATEDB;
+## Mantis UI Template
 
-// Exit psql
-\q
-```
+This project incorporates and adapts select components from a Material UI template, available [here](https://mui.com/store/items/mantis-react-admin-dashboard-template).
 
-### 4. Add Prisma
-- Install dependencies
-```
-npm install prisma --save-dev
-npm install @prisma/client @next-auth/prisma-adapter
-```
+## Source Code Availability
 
-- Set DATABASE_URL
-- Create minimal schema in `prisma/schema.prisma`
+Only a **skeleton** of the source code is open-sourced. **Reasons:**
 
-- Create Prisma client
-```
-npx prisma migrate dev --name init
-```
+1. Parts of the UI were built using a paid, closed-source Material UI template. That licensed code is **not** included in this repository.
 
-- Add this line in prisma.config.ts to fix missing required environemnt variable bug:
-```
-import "dotenv/config";
-```
+2. Originally developed as UCL teaching material. Due to redistribution restrictions, the full source code is **not** publicly available.
 
-- Create a singleton Prisma client in `src/lib/prisma.ts`
-
-### 5. Integrate Prisma into existing codebase
-- Install dependencies
-```
-npm install bcryptjs
-```
-- Change `src/utils/authOptions.ts` to use Prisma instead of axios
-for back-end logic
-
-- Change `prisma/schema.prisma` to include necessary NextAuth models
-
-### 6. Fix "@prisma/client did not initialize yet" bug
-- Create Prisma debug script in `scripts/check-prisma.cjs`
-- Change `schema.prisma` to use `prisma-client-js` as `provider` and no `src` value
-
-### 7. Address 404 response for GET request to /api/menu/dashboard
-- Comment out menu/dashboard preload call in AuthLogin
-
-### 8. Add logic for distinction between admin and normal users
-- Change `authOptions` to redirect based on `ROLE`
-Add placeholder pages for `admin/bookings/room` and `user/bookings/new`
-- Change `APP_DEFUALT_PATH` to `user/bookings/new`
-Clean up `GuestGuard` to stop redirecting to sample page
-- Add a sidebar menu-item for `user/bookings/new` entitled `"New Booking"`
-- Add `AdminGuard` to protect admin pages from non-admin usage
-
----
-
-## Docker
-```
-docker compose down
-docker compose up --build
-docker compose exec web npx prisma migrate deploy
-docker compose exec web npx prisma db seed
-```
+## Screenshots
+![](screenshots/login.png)
+![](screenshots/bookings.png)
+![](screenshots/weekly-bookings.png)
+![](screenshots/admin-create-booking.png)
