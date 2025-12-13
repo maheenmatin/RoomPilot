@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: meeting-room-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: meeting_user
+      POSTGRES_PASSWORD: meeting_password
+      POSTGRES_DB: meeting_db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      # expose only if you want to reach DB from host
+      - "5432:5432"
+
+  web:
+    build: .
+    container_name: meeting-room-web
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      # Prisma / DB
+      DATABASE_URL: postgresql://meeting_user:meeting_password@db:5432/meeting_db?schema=public
+
+      # NextAuth – for local Docker, you're hitting host:8081
+      NEXTAUTH_URL: http://localhost:8081/
+      NEXTAUTH_SECRET: LlKq6ZtYbr+hTC073mAmAh9/h2HwMfsFo4hrfCx5mLg=
+
+      # JWT
+      REACT_APP_JWT_TIMEOUT: "86400"
+      REACT_APP_JWT_SECRET: ikRgjkhi15HJiU78-OLKfjngiu=
+
+      # Google provider envs
+      GOOGLE_CLIENT_ID: 29166041166-pcgg78q4ucmjqbha1al290k3q9e7d78m.apps.googleusercontent.com
+      GOOGLE_CLIENT_SECRET: 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
+
+      # Next server port (optional, just to be explicit)
+      PORT: 3000
+    ports:
+      - "8081:3000" # host:container
+
+volumes:
+  db-data:
