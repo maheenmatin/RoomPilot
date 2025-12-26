@@ -16,7 +16,7 @@ Full-stack (React, Next.js, PostgreSQL) web application for booking meeting room
 - CRUD functionality via Next.js and Prisma
 - Data visualisation via MUI
 - Mobile optimisation via Tailwind
-- External provider authentication via Google API
+- External provider authentication via Google OAuth
 - Role-based access control via NextAuth
 - Containerisation via Docker
 
